@@ -17,9 +17,7 @@ from descwl_shear_sims.surveys import DEFAULT_SURVEY_BANDS, get_survey
 
 
 logger = logging.getLogger(__name__)
-fmt = logging.Formatter(
-    "%(name)s: %(asctime)s | %(levelname)s | %(message)s"
-)
+fmt = logging.Formatter("%(name)s: %(asctime)s | %(levelname)s | %(message)s")
 handler = logging.StreamHandler(sys.stdout)
 handler.setFormatter(handler)
 logger.addHandler(handler)
@@ -65,7 +63,9 @@ class SimulationCore(object):
         # Catalog directories
         cat_dir = get_config("cat_dir")
         self.cat_dir = construct_dir(cat_dir)
-        cat_dm_dir = get_config("cat_dm_dir", fallback=cat_dir.replace("cat", "cat_dm") if cat_dir else None)
+        cat_dm_dir = get_config(
+            "cat_dm_dir", fallback=cat_dir.replace("cat", "cat_dm") if cat_dir else None
+        )
         self.cat_dm_dir = construct_dir(cat_dm_dir)
         self.input_cat_dir = construct_dir(get_config("input_cat_dir"))
 
@@ -90,7 +90,9 @@ class SimulationCore(object):
         self.psf_fwhm = get_config("psf_fwhm", parse_type="float")
         self.psf_e1 = get_config("psf_e1", fallback=0.0, parse_type="float")
         self.psf_e2 = get_config("psf_e2", fallback=0.0, parse_type="float")
-        self.psf_variation = get_config("psf_variation", fallback=0.0, parse_type="float")
+        self.psf_variation = get_config(
+            "psf_variation", fallback=0.0, parse_type="float"
+        )
         assert self.psf_variation >= 0.0
 
         # Shear settings
@@ -101,27 +103,41 @@ class SimulationCore(object):
         self.nshear = len(self.shear_mode_list)
 
         # Systematics
-        self.cosmic_rays = get_config("cosmic_rays", fallback=False, parse_type="boolean")
-        self.bad_columns = get_config("bad_columns", fallback=False, parse_type="boolean")
+        self.cosmic_rays = get_config(
+            "cosmic_rays", fallback=False, parse_type="boolean"
+        )
+        self.bad_columns = get_config(
+            "bad_columns", fallback=False, parse_type="boolean"
+        )
 
         # Stars
-        self.stellar_density = get_config("stellar_density", fallback=-1.0, parse_type="float")
-        self.stellar_density = None if self.stellar_density < -0.01 else self.stellar_density
-        self.draw_bright = get_config("draw_bright", fallback=False, parse_type="boolean")
-        self.star_bleeds = get_config("star_bleeds", fallback=False, parse_type="boolean")
+        self.stellar_density = get_config(
+            "stellar_density", fallback=-1.0, parse_type="float"
+        )
+        self.stellar_density = (
+            None if self.stellar_density < -0.01 else self.stellar_density
+        )
+        self.draw_bright = get_config(
+            "draw_bright", fallback=False, parse_type="boolean"
+        )
+        self.star_bleeds = get_config(
+            "star_bleeds", fallback=False, parse_type="boolean"
+        )
 
         # Bands
-        self.sim_band_list = json.loads(get_config("sim_band_list", fallback=DEFAULT_BAND_LIST_JSON))
+        self.sim_band_list = json.loads(
+            get_config("sim_band_list", fallback=DEFAULT_BAND_LIST_JSON)
+        )
         self.nband = len(self.sim_band_list)
         return
-    
+
     def get_psf_obj(self, rng, scale):
         psf_obj = make_fixed_psf(
             psf_type="moffat",
             psf_fwhm=self.psf_fwhm,
         ).shear(e1=self.psf_e1, e2=self.psf_e2)
         return psf_obj
-    
+
     def get_sim_fnames(self, min_id, max_id, field_only=False):
         """Generate filename for simulations
         Args:
@@ -150,7 +166,7 @@ class SimulationCore(object):
                 for rid in range(self.nrot)
             ]
         return out
-    
+
     def get_seed_from_fname(self, fname):
         """This function returns the random seed for image noise simulation.
         It makes sure that different sheared versions have the same seed.
@@ -161,6 +177,7 @@ class SimulationCore(object):
         # rotation id
         rid = int(fname.split("rot")[1][0])
         return ((fid * self.nrot + rid)) * 3
+
 
 class Simulation(SimulationCore):
     def __init__(self, config_name):
