@@ -33,6 +33,13 @@ default_config = {
     "draw_bright": False,
     "star_catalog": None,
 }
+_band_map = {
+    "g": 0,
+    "r": 1,
+    "i": 2,
+    "z": 3,
+    "a": 4,
+}
 DEFAULT_BAND_LIST_JSON = '["r"]'
 DEFAULT_ZERO_POINT = 30.0
 
@@ -166,7 +173,7 @@ class SimulationCore(object):
             ]
         return out
 
-    def get_seed_from_fname(self, fname):
+    def get_seed_from_fname(self, fname, band):
         """This function returns the random seed for image noise simulation.
         It makes sure that different sheared versions have the same seed.
         But different rotated version, different bands have different seeds.
@@ -175,7 +182,11 @@ class SimulationCore(object):
         fid = int(fname.split("image-")[-1].split("_")[0]) + 212
         # rotation id
         rid = int(fname.split("rot")[1][0])
-        return ((fid * self.nrot + rid)) * 3
+        # band id
+        bm = deepcopy(_band_map)
+        bid = bm[band]
+        _nbands = len(bm.values())
+        return ((fid * self.nrot + rid) * _nbands + bid) * 3
 
 
 class Simulation(SimulationCore):
