@@ -16,12 +16,11 @@ from descwl_shear_sims.sim import make_sim
 from descwl_shear_sims.surveys import DEFAULT_SURVEY_BANDS, get_survey
 
 
-logger = logging.getLogger(__name__)
-fmt = logging.Formatter("%(name)s: %(asctime)s | %(levelname)s | %(message)s")
-handler = logging.StreamHandler(sys.stdout)
-handler.setFormatter(handler)
-logger.addHandler(handler)
-logger.setLevel(logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s %(message)s",
+    datefmt="%Y/%m/%d %H:%M:%S --- ",
+    level=logging.INFO,
+)
 
 default_config = {
     "cosmic_rays": False,
@@ -190,7 +189,7 @@ class Simulation(SimulationCore):
         return
 
     def run(self, ifield):
-        logger.info(f"Simulating for field: {ifield}")
+        logging.info(f"Simulating for field: {ifield}")
         rng = np.random.RandomState(ifield)
         scale = get_survey(
             gal_type="wldeblend",
@@ -209,7 +208,7 @@ class Simulation(SimulationCore):
             pixel_scale=scale,
             layout=self.layout,
         )
-        logger.info(f"Simulation has galaxies: {len(galaxy_catalog)}")
+        logging.info(f"Simulation has galaxies: {len(galaxy_catalog)}")
         for shear_mode in self.shear_mode_list:
             shear_obj = ShearTXConstant(
                 mode=shear_mode,
