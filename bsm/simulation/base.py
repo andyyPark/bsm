@@ -1,5 +1,6 @@
 import gc
 import os
+import sys
 from copy import deepcopy
 import json
 import logging
@@ -19,7 +20,9 @@ logger = logging.getLogger(__name__)
 fmt = logging.Formatter(
     "%(name)s: %(asctime)s | %(levelname)s | %(message)s"
 )
-logger.setFormatter(fmt)
+handler = logging.StreamHandler(sys.stdout)
+handler.setFormatter(handler)
+logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 default_config = {
@@ -159,15 +162,13 @@ class SimulationCore(object):
         rid = int(fname.split("rot")[1][0])
         return ((fid * self.nrot + rid)) * 3
 
-class Simluation(SimulationCore):
+class Simulation(SimulationCore):
     def __init__(self, config_name):
         cparser = ConfigParser(interpolation=ExtendedInterpolation())
         cparser.read(config_name)
         super().__init__(cparser)
         if not os.path.isdir(self.img_dir):
             os.makedirs(self.img_dir, exist_ok=True)
-
-        self.z_bounds = json.loads(cparser.get("simulation", "z_bounds"))
         self.shear_value = cparser.getfloat("simulation", "shear_value")
         return
 
