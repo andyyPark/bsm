@@ -165,7 +165,7 @@ class SimulationCore(object):
             out = [
                 os.path.join(
                     self.img_dir,
-                    "image-%05d_g1-%d_rot%d_xxx.fits" % (fid, gid, rid),
+                    "image-%05d_%s-%d_rot%d_r.fits" % (fid, self.shear_comp_sim, gid, rid),
                 )
                 for fid in range(min_id, max_id)
                 for gid in self.shear_mode_list

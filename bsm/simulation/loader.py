@@ -123,3 +123,6 @@ class SimulationLoader(SimulationCore):
         dm_wcs = make_dm_wcs(se_wcs)
         exp.setWcs(dm_wcs)
         return exp
+
+    def run(self, fname):
+        return self.generate_exposure(fname)
