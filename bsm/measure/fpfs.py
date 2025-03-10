@@ -120,7 +120,6 @@ class MeasureFPFS(SimulationCore):
             "pixel_scale": pixel_scale,
             "noise_std": noise_std,
             "noise_array": noise_array,
-            "psf_obj": psf_obj,
             "mask_array": mask_array,
             "star_cat": star_cat
         }
