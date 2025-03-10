@@ -49,7 +49,6 @@ class MeasureFPFS(SimulationCore):
         pixel_scale,
         noise_std,
         noise_array,
-        psf_obj,
         mask_array,
         star_cat,
     ):
