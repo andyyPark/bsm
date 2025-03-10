@@ -132,7 +132,7 @@ class MeasureFPFS(SimulationCore):
         out = self.process_image(**data)
         sname = fname.replace(
             "image", "src").replace(
-                self.sim_name, self.cat_dir"
+                self.sim_name, self.cat_dir
             )
         fitsio.write(
             sname,
